@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/kofeebrian/capamass/protos/amass/enum";
+
+package enum;
+
+service EnumService {
+  rpc BasicEnumerate(EnumRequest) returns (EnumResponse) {};
+}
+
+message EnumRequest {
+  string DomainName = 1;
+}
+
+message EnumResponse {
+  string Result = 1;
+}
