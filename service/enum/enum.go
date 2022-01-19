@@ -18,9 +18,13 @@ var (
 )
 
 func enumerate(name string) (string, error) {
-	// TODO: use config.ini
-	cmd := exec.Command("amass", "enum")
-	out, err := cmd.CombinedOutput()
+	cmd := exec.Command("amass", "enum", "-d", name)
+	cmd.Args = append(cmd.Args, "-timeout", "2")                       // set timeout 2 min.
+	cmd.Args = append(cmd.Args, "-config", "utils/config/default.ini") // use config TODO: user can choose
+	cmd.Args = append(cmd.Args, "-ip")                                 // show ip
+
+	out, err := cmd.CombinedOutput() // combine both stdout and stderr
+
 	if err != nil {
 		return "", err
 	}
