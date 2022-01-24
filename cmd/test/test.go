@@ -33,5 +33,4 @@ func main() {
 	}
 
 	log.Printf("finished...")
-
 }

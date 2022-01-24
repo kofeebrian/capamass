@@ -1,0 +1,33 @@
+version: "3.0"
+
+services:
+  enum_service:
+    image: kofeebrian/enum-service
+    build: 
+      context: .
+      dockerfile: ./cmd/service/Dockerfile
+    restart: unless-stopped 
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data/:/data
+    networks:
+      - service
+  
+  # client:
+  #   image: kofeebrian/enum-client
+  #   build:
+  #     context: .
+  #     dockerfile: ./cmd/client/Dockerfile
+  #     args:
+  #       target: "owasp.org"
+  #   depends_on:
+  #     - enum_service
+  #   networks:
+  #     - backend
+  #     - service
+
+networks:
+  backend:
+  service:
+    

@@ -11,7 +11,7 @@ import (
 
 func main() {
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	conn, err := grpc.Dial("127.0.0.1:3000", opts...)
+  conn, err := grpc.Dial("enum_service:3000", opts...)
 	if err != nil {
 		log.Fatalf("failed to connect: %v", err)
 	}
@@ -21,7 +21,7 @@ func main() {
 
 	c = enumpb.NewEnumServiceClient(conn)
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 1; i++ {
 		wg.Add(1)
 
 		go func(i int) {
