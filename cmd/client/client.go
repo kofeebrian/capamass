@@ -2,16 +2,36 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"log"
+	"os"
+	"strconv"
 	"sync"
 
+	"github.com/joho/godotenv"
 	enumpb "github.com/kofeebrian/capamass/protos/amass/enum"
 	"google.golang.org/grpc"
 )
 
+var (
+	name = flag.String("name", "", "domain name")
+)
+
 func main() {
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("failed to get .env: %v", err)
+	}
+
+	host := os.Getenv("HOST")
+	port, _ := strconv.Atoi(os.Getenv("PORT"))
+
+	flag.Parse()
+
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-  conn, err := grpc.Dial("enum_service:3000", opts...)
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", host, port), opts...)
 	if err != nil {
 		log.Fatalf("failed to connect: %v", err)
 	}
@@ -31,7 +51,7 @@ func main() {
 			defer cancel()
 
 			req := enumpb.EnumRequest{
-				DomainName: "chula.ac.th",
+				Domains: []string{*name},
 			}
 
 			res, err := c.BasicEnumerate(ctx, &req)
