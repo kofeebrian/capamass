@@ -1,0 +1,10 @@
+# environment
+.env
+
+# go
+go.sum
+
+# python
+**/.venv
+__pycache__/
+*.py[cod]
