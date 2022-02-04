@@ -8,3 +8,6 @@ go.sum
 **/.venv
 __pycache__/
 *.py[cod]
+
+# custom
+data/

@@ -9,15 +9,15 @@ service EnumService {
 }
 
 message EnumRequest {
-  repeated string domains = 1;
+  string domain = 1;
 }
 
 message EnumResponse {
   message Address {
     string ip = 1;
-    string Cidr = 2;
-    uint32 ASN = 3;
-    string Desc = 4;
+    string cidr = 2;
+    uint32 asn = 3;
+    string desc = 4;
   }
 
   message Result {
@@ -25,6 +25,7 @@ message EnumResponse {
     string domain = 2;
     repeated Address addresses = 3;
     string tag = 4;
+    repeated string sources = 5;
   }
 
   repeated Result results = 1;

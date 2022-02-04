@@ -51,7 +51,7 @@ func main() {
 			defer cancel()
 
 			req := enumpb.EnumRequest{
-				Domains: []string{*name},
+				Domain: *name,
 			}
 
 			res, err := c.BasicEnumerate(ctx, &req)
