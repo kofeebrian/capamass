@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "github.com/kofeebrian/capamass/protos/amass";
+
+import "google/protobuf/timestamp.proto";
+
+message Address {
+  string ip = 1;
+  string cidr = 2;
+  uint32 asn = 3;
+  string desc = 4;
+}
+
+message EnumResult {
+  string name = 1;
+  string domain = 2;
+  repeated Address addresses = 3;
+  string tag = 4;
+  repeated string sources = 5;
+}
+
+message Domains {
+  string domain = 1;
+  uint64 total = 2;
+  repeated EnumResult names = 3;
+}
+
+message Event {
+  string uuid = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp finish = 3;
+}

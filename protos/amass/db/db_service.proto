@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/kofeebrian/capamass/protos/amass/db";
+
+package db;
+
+import "protos/amass/db/db_message.proto";
+
+service DBService {
+  rpc Run(DBRequest) returns (DBResponse) {};
+}
