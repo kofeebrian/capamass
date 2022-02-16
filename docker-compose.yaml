@@ -10,22 +10,10 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./data/:/data
+      - ./data:/data
+      - ./amass:/.config/amass
     networks:
       - service
-  
-  # client:
-  #   image: kofeebrian/enum-client
-  #   build:
-  #     context: .
-  #     dockerfile: ./cmd/client/Dockerfile
-  #     args:
-  #       target: "owasp.org"
-  #   depends_on:
-  #     - enum_service
-  #   networks:
-  #     - backend
-  #     - service
 
 networks:
   backend:

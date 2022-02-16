@@ -2,8 +2,6 @@ syntax = "proto3";
 
 option go_package = "github.com/kofeebrian/capamass/protos/amass";
 
-import "google/protobuf/timestamp.proto";
-
 message Address {
   string ip = 1;
   string cidr = 2;
@@ -27,6 +25,6 @@ message Domains {
 
 message Event {
   string uuid = 1;
-  google.protobuf.Timestamp start = 2;
-  google.protobuf.Timestamp finish = 3;
+  string start = 2;
+  string finish = 3;
 }

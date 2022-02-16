@@ -1,11 +1,9 @@
 package db
 
 import (
-	"bufio"
 	"context"
 	"encoding/json"
 	"log"
-	"os"
 	"os/exec"
 
 	pb "github.com/kofeebrian/capamass/protos/amass/db"
@@ -15,38 +13,37 @@ type DBService struct {
 	pb.UnimplementedDBServiceServer
 }
 
-func runDBCommand(ctx *context.Context, domain string) error {
+func runDBCommand(ctx *context.Context, domain string, config *pb.DBConfig) ([]byte, error) {
 	cmd := exec.Command("amass", "db")
-	cmd.Args = append(cmd.Args, "-d", domain)
-	cmd.Args = append(cmd.Args, "-json", "/data/out.json")
+	cmd.Args = append(cmd.Args, "-dir", "/.config/amass")
 
-	return cmd.Run()
+	if latest := config.GetLatest(); latest {
+		cmd.Args = append(cmd.Args, "-enum", "1")
+	}
+
+	if domain != "" {
+		cmd.Args = append(cmd.Args, "-d", domain)
+	}
+
+	cmd.Args = append(cmd.Args, "-json", "-")
+
+	return cmd.Output()
 }
 
 func (*DBService) Run(ctx context.Context, req *pb.DBRequest) (*pb.DBResponse, error) {
-	id := req.Id
-	domain := req.Domain
+	id := req.GetId()
+	domain := req.GetDomain()
+	config := req.GetConfig()
 
-	if err := runDBCommand(&ctx, domain); err != nil {
+	out, err := runDBCommand(&ctx, domain, config)
+	if err != nil {
 		log.Panicf("fail to run db command: %v", err)
 		return nil, err
 	}
 
-	file, err := os.Open("/data/out.json")
-	if err != nil {
-		log.Panicf("fail to open file: %v", err)
-		return nil, err
-	}
-	defer file.Close()
-
+	log.Printf("%s", string(out[:]))
 	var result *pb.DBResult
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	scanner.Scan()
-	m := scanner.Text()
-
-	err = json.Unmarshal([]byte(m), &result)
+	err = json.Unmarshal(out, &result)
 	if err != nil {
 		log.Panicf("fail to parse output: %v", err)
 		return nil, err
@@ -54,7 +51,7 @@ func (*DBService) Run(ctx context.Context, req *pb.DBRequest) (*pb.DBResponse, e
 
 	return &pb.DBResponse{
 		Id:     id,
-		Domain: domain,
+		Domain: &domain,
 		Result: result,
 	}, err
 }

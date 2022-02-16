@@ -20,6 +20,8 @@ func runEnumCommand(ctx *context.Context, domain string, config *pb.EnumConfig) 
 	cmd.Stdout = os.Stdout // debug
 	cmd.Args = append(cmd.Args, "-d", domain)
 
+	cmd.Args = append(cmd.Args, "-dir", "/.config/amass")
+
 	/* Timeout */
 	if timeout := config.GetTimeout(); timeout > 0 {
 		cmd.Args = append(cmd.Args, "-timeout", strconv.FormatUint(uint64(timeout), 10)) // set timeout in min.
