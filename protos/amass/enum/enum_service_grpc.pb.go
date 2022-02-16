@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.17.3
-// source: protos/amass/enum/enum.proto
+// source: protos/amass/enum/enum_service.proto
 
 package enum
 
@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EnumServiceClient interface {
-	BasicEnumerate(ctx context.Context, in *EnumRequest, opts ...grpc.CallOption) (*EnumResponse, error)
+	Run(ctx context.Context, in *EnumRequest, opts ...grpc.CallOption) (*EnumResponse, error)
 }
 
 type enumServiceClient struct {
@@ -33,9 +33,9 @@ func NewEnumServiceClient(cc grpc.ClientConnInterface) EnumServiceClient {
 	return &enumServiceClient{cc}
 }
 
-func (c *enumServiceClient) BasicEnumerate(ctx context.Context, in *EnumRequest, opts ...grpc.CallOption) (*EnumResponse, error) {
+func (c *enumServiceClient) Run(ctx context.Context, in *EnumRequest, opts ...grpc.CallOption) (*EnumResponse, error) {
 	out := new(EnumResponse)
-	err := c.cc.Invoke(ctx, "/enum.EnumService/BasicEnumerate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/enum.EnumService/Run", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *enumServiceClient) BasicEnumerate(ctx context.Context, in *EnumRequest,
 // All implementations must embed UnimplementedEnumServiceServer
 // for forward compatibility
 type EnumServiceServer interface {
-	BasicEnumerate(context.Context, *EnumRequest) (*EnumResponse, error)
+	Run(context.Context, *EnumRequest) (*EnumResponse, error)
 	mustEmbedUnimplementedEnumServiceServer()
 }
 
@@ -54,8 +54,8 @@ type EnumServiceServer interface {
 type UnimplementedEnumServiceServer struct {
 }
 
-func (UnimplementedEnumServiceServer) BasicEnumerate(context.Context, *EnumRequest) (*EnumResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BasicEnumerate not implemented")
+func (UnimplementedEnumServiceServer) Run(context.Context, *EnumRequest) (*EnumResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Run not implemented")
 }
 func (UnimplementedEnumServiceServer) mustEmbedUnimplementedEnumServiceServer() {}
 
@@ -70,20 +70,20 @@ func RegisterEnumServiceServer(s grpc.ServiceRegistrar, srv EnumServiceServer) {
 	s.RegisterService(&EnumService_ServiceDesc, srv)
 }
 
-func _EnumService_BasicEnumerate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EnumService_Run_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EnumRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EnumServiceServer).BasicEnumerate(ctx, in)
+		return srv.(EnumServiceServer).Run(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/enum.EnumService/BasicEnumerate",
+		FullMethod: "/enum.EnumService/Run",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EnumServiceServer).BasicEnumerate(ctx, req.(*EnumRequest))
+		return srv.(EnumServiceServer).Run(ctx, req.(*EnumRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,10 +96,10 @@ var EnumService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*EnumServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "BasicEnumerate",
-			Handler:    _EnumService_BasicEnumerate_Handler,
+			MethodName: "Run",
+			Handler:    _EnumService_Run_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "protos/amass/enum/enum.proto",
+	Metadata: "protos/amass/enum/enum_service.proto",
 }

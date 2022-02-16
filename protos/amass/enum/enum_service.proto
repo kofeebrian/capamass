@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/kofeebrian/capamass/protos/amass/enum";
+
+import "protos/amass/enum/enum_message.proto";
+
+package enum;
+
+service EnumService {
+  rpc Run(EnumRequest) returns (EnumResponse) {};
+}

@@ -54,7 +54,7 @@ func main() {
 				Domain: *name,
 			}
 
-			res, err := c.BasicEnumerate(ctx, &req)
+			res, err := c.Run(ctx, &req)
 			if err != nil {
 				log.Fatalf("error to enumerate: %v", err)
 			}

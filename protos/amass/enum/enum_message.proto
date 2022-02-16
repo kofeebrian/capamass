@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "github.com/kofeebrian/capamass/protos/amass/enum";
+
+package enum;
+
+message EnumConfig {
+  enum Mode {
+    DEFAULT = 0;
+    PASSIVE = 1;
+    ACTIVE = 2;
+  }
+
+  optional Mode mode = 1;
+  optional uint32 timeout = 2;
+  repeated string dnsResolvers = 3;
+}
+
+message EnumRequest {
+  string id = 1;
+  string domain = 2;
+  optional EnumConfig config = 3;
+}
+
+message EnumResponse {
+  string id = 1;
+  string domain = 2;
+}
