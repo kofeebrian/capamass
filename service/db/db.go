@@ -41,7 +41,6 @@ func (*DBService) Run(ctx context.Context, req *pb.DBRequest) (*pb.DBResponse, e
 		return nil, err
 	}
 
-	log.Printf("%s", string(out[:]))
 	var result *pb.DBResult
 	err = json.Unmarshal(out, &result)
 	if err != nil {

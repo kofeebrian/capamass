@@ -2,7 +2,7 @@ version: "3.0"
 
 services:
   enum_service:
-    image: kofeebrian/enum-service
+    image: kofeebrian/amass-service
     build: 
       context: .
       dockerfile: ./cmd/service/Dockerfile
