@@ -32,7 +32,7 @@ func runEnumCommand(ctx *context.Context, domain string, config *pb.EnumConfig) 
 	/* Mode */
 	switch mode := config.GetMode(); mode {
 	case pb.EnumConfig_ACTIVE:
-		cmd.Args = append(cmd.Args, "-config", "utils/config/attack.ini")
+		cmd.Args = append(cmd.Args, "-config", "utils/config/active.ini")
 	case pb.EnumConfig_PASSIVE:
 		cmd.Args = append(cmd.Args, "-config", "utils/config/passive.ini")
 	case pb.EnumConfig_DEFAULT:
