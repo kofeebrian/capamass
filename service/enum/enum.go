@@ -15,8 +15,8 @@ type EnumServer struct {
 	pb.UnimplementedEnumServiceServer
 }
 
-func runEnumCommand(ctx *context.Context, domain string, config *pb.EnumConfig) error {
-	cmd := exec.Command("amass", "enum")
+func runEnumCommand(ctx context.Context, domain string, config *pb.EnumConfig) error {
+	cmd := exec.CommandContext(ctx, "amass", "enum")
 	cmd.Stdout = os.Stdout // debug
 	cmd.Args = append(cmd.Args, "-d", domain)
 
@@ -60,7 +60,7 @@ func (*EnumServer) Run(ctx context.Context, req *pb.EnumRequest) (*pb.EnumRespon
 	domain := req.GetDomain()
 	config := req.GetConfig()
 
-	err := runEnumCommand(&ctx, domain, config)
+	err := runEnumCommand(ctx, domain, config)
 	if err != nil {
 		log.Panicf("failed to enumerate: %v", err)
 		return nil, err

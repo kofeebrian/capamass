@@ -15,8 +15,8 @@ type VizService struct {
 	pb.UnimplementedVizServiceServer
 }
 
-func runVizCommand(ctx *context.Context, domain string, config *pb.VizConfig) error {
-	cmd := exec.Command("amass", "viz")
+func runVizCommand(ctx context.Context, domain string, config *pb.VizConfig) error {
+	cmd := exec.CommandContext(ctx, "amass", "viz")
 	cmd.Args = append(cmd.Args, "-dir", "/.config/amass")
 	cmd.Args = append(cmd.Args, "-d", domain)
 
@@ -30,23 +30,23 @@ func runVizCommand(ctx *context.Context, domain string, config *pb.VizConfig) er
 }
 
 func readResult(ctx *context.Context, result *pb.GraphistryResult) error {
-  file, err := os.Open("/data/amass_graphistry.json")
-  if err != nil {
-    log.Panicf("failed to open result file: %v", err)
-    return err
-  }
-  defer file.Close()
+	file, err := os.Open("/data/amass_graphistry.json")
+	if err != nil {
+		log.Panicf("failed to open result file: %v", err)
+		return err
+	}
+	defer file.Close()
 
-  value, _ := ioutil.ReadAll(file)
+	value, _ := ioutil.ReadAll(file)
 
-  return json.Unmarshal(value, &result)
+	return json.Unmarshal(value, &result)
 }
 
 func (*VizService) GetGraphistry(ctx context.Context, req *pb.VizRequest) (*pb.VizResponse, error) {
 	id := req.GetId()
 	domain := req.GetDomain()
 
-	err := runVizCommand(&ctx, domain, &pb.VizConfig{
+	err := runVizCommand(ctx, domain, &pb.VizConfig{
 		Graphistry: true,
 	})
 
@@ -55,12 +55,12 @@ func (*VizService) GetGraphistry(ctx context.Context, req *pb.VizRequest) (*pb.V
 		return nil, err
 	}
 
-  var result pb.GraphistryResult
-  err = readResult(&ctx, &result)
-  if err != nil {
-    log.Panicf("failed to read result file: %v", err)
-    return nil, err
-  }
+	var result pb.GraphistryResult
+	err = readResult(&ctx, &result)
+	if err != nil {
+		log.Panicf("failed to read result file: %v", err)
+		return nil, err
+	}
 
 	return &pb.VizResponse{
 		Id:     id,

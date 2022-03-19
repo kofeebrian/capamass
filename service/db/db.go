@@ -13,8 +13,8 @@ type DBService struct {
 	pb.UnimplementedDBServiceServer
 }
 
-func runDBCommand(ctx *context.Context, domain string, config *pb.DBConfig) ([]byte, error) {
-	cmd := exec.Command("amass", "db")
+func runDBCommand(ctx context.Context, domain string, config *pb.DBConfig) ([]byte, error) {
+	cmd := exec.CommandContext(ctx, "amass", "db")
 	cmd.Args = append(cmd.Args, "-dir", "/.config/amass")
 
 	if latest := config.GetLatest(); latest {
@@ -35,7 +35,7 @@ func (*DBService) Run(ctx context.Context, req *pb.DBRequest) (*pb.DBResponse, e
 	domain := req.GetDomain()
 	config := req.GetConfig()
 
-	out, err := runDBCommand(&ctx, domain, config)
+	out, err := runDBCommand(ctx, domain, config)
 	if err != nil {
 		log.Panicf("fail to run db command: %v", err)
 		return nil, err

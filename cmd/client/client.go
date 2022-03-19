@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/joho/godotenv"
 	enumpb "github.com/kofeebrian/capamass/protos/amass/enum"
@@ -37,9 +38,8 @@ func main() {
 	}
 
 	var wg sync.WaitGroup
-	var c enumpb.EnumServiceClient
 
-	c = enumpb.NewEnumServiceClient(conn)
+	c := enumpb.NewEnumServiceClient(conn)
 
 	for i := 0; i < 1; i++ {
 		wg.Add(1)
@@ -47,11 +47,19 @@ func main() {
 		go func(i int) {
 			defer wg.Done()
 
-			ctx, cancel := context.WithCancel(context.Background())
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 			defer cancel()
 
+			mode := enumpb.EnumConfig_Mode(0) // Enumeration Mode
+			timeout := uint32(2)              // Client timeout
+
 			req := enumpb.EnumRequest{
+				Id:     "user-1",
 				Domain: *name,
+				Config: &enumpb.EnumConfig{
+					Mode:    &mode,
+					Timeout: &timeout,
+				},
 			}
 
 			res, err := c.Run(ctx, &req)
